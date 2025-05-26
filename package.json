@@ -1,0 +1,35 @@
+{
+  "name": "lpse-telegram-bot",
+  "version": "1.0.0",
+  "description": "LPSE Tender Scraper & Telegram Bot Integration",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js",
+    "dev": "nodemon bot.js",
+    "pm2-start": "pm2 start bot.js --name lpse-bot",
+    "pm2-stop": "pm2 stop lpse-bot",
+    "pm2-restart": "pm2 restart lpse-bot",
+    "pm2-logs": "pm2 logs lpse-bot"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "lpse",
+    "tender",
+    "scraper",
+    "notification"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "node-telegram-bot-api": "^0.61.0",
+    "axios": "^1.6.0",
+    "cheerio": "^1.0.0-rc.12"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

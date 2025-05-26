@@ -1,0 +1,43 @@
+{
+  "262323498": {
+    "chatId": 262323498,
+    "name": "Shiddiq",
+    "registeredAt": "2025-05-26T03:48:12.707Z",
+    "kbliList": [
+      "122121"
+    ],
+    "keywords": [
+      "aplikasi",
+      "angke"
+    ],
+    "urlList": [
+      "https://lpse.jakarta.go.id"
+    ],
+    "includeNonTender": false,
+    "isActive": true,
+    "sentTenders": [
+      "10021466000",
+      "10033054000"
+    ]
+  },
+  "1188478647": {
+    "chatId": 1188478647,
+    "name": "sidiq",
+    "registeredAt": "2025-05-26T04:02:30.898Z",
+    "kbliList": [
+      "📋 View KBLI",
+      "rtyuhhh"
+    ],
+    "keywords": [
+      "angke"
+    ],
+    "urlList": [
+      "https://lpse.jakarta.go.id"
+    ],
+    "includeNonTender": true,
+    "isActive": true,
+    "sentTenders": [
+      "10021466000"
+    ]
+  }
+}
