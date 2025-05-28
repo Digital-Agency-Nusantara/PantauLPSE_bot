@@ -249,7 +249,16 @@ class MessageHandlers {
     }
     
     const result = await this.monitoringService.start();
-    this.bot.sendMessage(chatId, result.message, this.keyboards.getMainMenuKeyboard(chatId));
+    
+    // Pastikan keyboard diperbarui setelah status monitoring berubah
+    const updatedKeyboard = this.keyboards.getMainMenuKeyboard(chatId);
+    
+    // Kirim pesan konfirmasi dengan keyboard yang sudah diperbarui
+    if (result.success) {
+      this.bot.sendMessage(chatId, `${result.message}\n\nStatus monitoring sekarang: 🟢 ACTIVE`, updatedKeyboard);
+    } else {
+      this.bot.sendMessage(chatId, result.message, updatedKeyboard);
+    }
   }
 
   // Handle stop monitoring
@@ -261,7 +270,12 @@ class MessageHandlers {
     }
     
     const result = await this.monitoringService.stop();
-    this.bot.sendMessage(chatId, result.message, this.keyboards.getMainMenuKeyboard(chatId));
+    
+    // Pastikan keyboard diperbarui setelah status monitoring berubah
+    const updatedKeyboard = this.keyboards.getMainMenuKeyboard(chatId);
+    
+    // Kirim pesan konfirmasi dengan keyboard yang sudah diperbarui
+    this.bot.sendMessage(chatId, `${result.message}\n\nStatus monitoring sekarang: 🔴 INACTIVE`, updatedKeyboard);
   }
 
   // Handle status

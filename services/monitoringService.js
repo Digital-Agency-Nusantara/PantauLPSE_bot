@@ -51,11 +51,26 @@ class MonitoringService {
       return { success: false, message: 'Monitoring tidak sedang berjalan!' };
     }
 
+    console.log('Stopping scraping loop...');
+    
+    // Set flag ke false agar loop berhenti
     this.isActive = false;
+    
+    // Hentikan proses scraping yang sedang berjalan
+    if (this.scraper) {
+      console.log('Signaling scraper to stop...');
+      this.scraper.stopScraping();
+    }
+    
+    // Bersihkan interval jika ada
     if (this.scrapingInterval) {
+      console.log('Clearing scraping interval...');
       clearTimeout(this.scrapingInterval);
       this.scrapingInterval = null;
     }
+    
+    // Log bahwa scraping telah berhenti
+    console.log('Scraping loop stopped successfully');
 
     // Notify all users
     await this.notificationService.notifyMonitoringStop();
@@ -64,7 +79,9 @@ class MonitoringService {
   }
 
   async startScrapingLoop() {
-    console.log('Starting scraping loop...');
+    console.log('=== STARTING SCRAPING LOOP ===');
+    console.log(`Timestamp: ${new Date().toISOString()}`);
+    console.log('Monitoring status: ACTIVE');
     
     // Simpan instance monitoringService ke global scope agar bisa diakses oleh keyboard
     global.monitoringServiceInstance = this;
@@ -74,7 +91,9 @@ class MonitoringService {
     const runScrapingCycle = async () => {
       // Jika monitoring sudah tidak aktif, hentikan loop
       if (!this.isActive) {
-        console.log('Monitoring stopped, exiting scraping loop');
+        console.log('=== EXITING SCRAPING LOOP ===');
+        console.log(`Timestamp: ${new Date().toISOString()}`);
+        console.log('Monitoring status: INACTIVE');
         return;
       }
       
@@ -107,7 +126,10 @@ class MonitoringService {
           await this.notificationService.checkAndNotify(scrapeResults, user);
         }
         
-        console.log(`Scraping cycle completed. Found ${scrapeResults.length} total results. Waiting for next cycle...`);
+        console.log(`=== SCRAPING CYCLE COMPLETED ===`);
+        console.log(`Timestamp: ${new Date().toISOString()}`);
+        console.log(`Found ${scrapeResults.length} total results`);
+        console.log(`Waiting ${config.SCRAPING_INTERVAL/1000} seconds for next cycle...`);
         // Jadwalkan siklus berikutnya dengan setTimeout
         this.scrapingInterval = setTimeout(() => runScrapingCycle(), config.SCRAPING_INTERVAL);
         

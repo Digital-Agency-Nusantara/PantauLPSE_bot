@@ -6,15 +6,39 @@ const config = require('../config/config');
 class Scraper {
   constructor() {
     this.delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+    this.shouldStop = false;
+  }
+  
+  // Metode untuk menghentikan proses scraping
+  stopScraping() {
+    console.log('Stopping scraper...');
+    this.shouldStop = true;
+  }
+  
+  // Metode untuk mereset status stop
+  resetStop() {
+    this.shouldStop = false;
   }
 
   async scrape(url, kbliList) {
     try {
+      // Periksa apakah scraping harus dihentikan
+      if (this.shouldStop) {
+        console.log('Scrape method interrupted by stop signal for URL:', url);
+        return [];
+      }
+      
       const { data } = await axios.get(url, {
         headers: {
           'User-Agent': config.USER_AGENT
         }
       });
+      
+      // Periksa lagi setelah mendapatkan data
+      if (this.shouldStop) {
+        console.log('Scrape method interrupted after fetching data for URL:', url);
+        return [];
+      }
       
       const $ = cheerio.load(data);
       const tbody = $('tbody');
@@ -25,6 +49,12 @@ class Scraper {
       const results = [];
       
       for (const element of rows) {
+        // Periksa apakah scraping harus dihentikan dalam loop
+        if (this.shouldStop) {
+          console.log('Scrape loop interrupted by stop signal while processing rows for URL:', url);
+          break;
+        }
+        
         const linkElement = $(element).find('td a');
         const hpsElement = $(element).find('td.table-hps');
         const tanggalAkhirElement = $(element).find('td.center');
@@ -94,10 +124,26 @@ class Scraper {
   async scrapeMultipleUrls(urls, kbliList) {
     const allResults = [];
     
+    // Reset flag stop sebelum memulai
+    this.resetStop();
+    
     for (const url of urls) {
+      // Periksa apakah scraping harus dihentikan
+      if (this.shouldStop) {
+        console.log('Scraping process interrupted by stop signal');
+        break;
+      }
+      
       console.log('Checking URL:', url);
       const results = await this.scrape(url, kbliList);
       allResults.push(...results);
+      
+      // Periksa lagi apakah harus berhenti sebelum delay
+      if (this.shouldStop) {
+        console.log('Scraping process interrupted by stop signal after checking URL:', url);
+        break;
+      }
+      
       await this.delay(config.URL_DELAY);
     }
     
