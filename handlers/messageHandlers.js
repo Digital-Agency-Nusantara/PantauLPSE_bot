@@ -65,7 +65,7 @@ class MessageHandlers {
     this.bot.sendMessage(chatId, 
       `Terima kasih!\n\n` +
       `Sekarang, mohon masukkan kode KBLI usaha Anda (contoh: 41001):\n\n` +
-      `KBLI adalah Klasifikasi Baku Lapangan Usaha Indonesia yang digunakan dalam tender pemerintah.\n` +
+      `KBLI ini akan digunakan untuk mencari tender yang sesuai dengan bidang usaha Anda.\n` +
       `Anda dapat menemukan kode KBLI di NIB/SIUP/TDP perusahaan Anda.`
     );
     this.userStateManager.setState(chatId, 'awaiting_kbli_registration');
