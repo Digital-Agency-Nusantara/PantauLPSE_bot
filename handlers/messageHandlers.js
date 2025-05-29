@@ -115,7 +115,7 @@ class MessageHandlers {
     const kbli = this.userStateManager.getTempData(chatId, 'kbli');
     this.dataManager.addKbli(chatId, kbli);
     
-    // Add keyword
+    // Tambah Kata kunci
     const keyword = this.userStateManager.getTempData(chatId, 'keyword');
     this.dataManager.addKeyword(chatId, keyword);
     
@@ -180,15 +180,15 @@ class MessageHandlers {
         this.bot.sendMessage(chatId, '🔍 Daftar Kata Kunci Menu:', this.keyboards.getKeywordsKeyboard());
         break;
         
-      case '⚙️ Settings':
+      case '⚙️ Pengaturan':
         this.settingsHandler.handleSettings(chatId);
         break;
         
-      case '🟢 Start Monitoring':
+      case '🟢 Mulai Monitoring':
         this.handleStartMonitoring(chatId);
         break;
         
-      case '🔴 Stop Monitoring':
+      case '🔴 Berhenti Monitoring':
         this.handleStopMonitoring(chatId);
         break;
         
@@ -196,7 +196,7 @@ class MessageHandlers {
         this.handleStatus(chatId);
         break;
         
-      case '👤 Profile':
+      case '👤 Profil':
         this.handleProfile(chatId);
         break;
         
@@ -214,21 +214,21 @@ class MessageHandlers {
         }
         break;
         
-      case '🏠 Back to Menu':
+      case '🏠 Kembali ke Menu':
         this.bot.sendMessage(chatId, '🏠 Main Menu:', this.keyboards.getMainMenuKeyboard(chatId));
         break;
         
       // KBLI Menu
-      case '➕ Add KBLI':
+      case '➕ Tambah KBLI':
         this.bot.sendMessage(chatId, 'Masukkan kode KBLI (contoh: 41001):');
         this.userStateManager.setState(chatId, 'awaiting_kbli');
         break;
         
-      case '📋 View KBLI':
+      case '📋 Lihat KBLI':
         this.kbliHandler.handleViewKbli(chatId);
         break;
         
-      case '🗑️ Delete KBLI':
+      case '🗑️ Hapus KBLI':
         this.kbliHandler.handleDeleteKbliMenu(chatId);
         break;
         
@@ -243,16 +243,16 @@ Admin akan membantu Anda dengan proses pembayaran dan pengaktifan akun.
 Admin: ${config.ADMIN_TELE}`);
         break;
         
-      case '➕ Add Keyword':
+      case '➕ Tambah Kata Kunci':
         this.bot.sendMessage(chatId, 'Masukkan keyword (contoh: konstruksi):');
         this.userStateManager.setState(chatId, 'awaiting_keyword');
         break;
         
-      case '📋 View Keywords':
+      case '📋 Lihat Kata Kunci':
         this.keywordHandler.handleViewKeywords(chatId);
         break;
         
-      case '🗑️ Delete Keyword':
+      case '🗑️ Hapus Kata Kunci':
         this.keywordHandler.handleDeleteKeywordMenu(chatId);
         break;
         

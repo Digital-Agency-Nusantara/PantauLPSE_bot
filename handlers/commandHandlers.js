@@ -116,14 +116,14 @@ class CommandHandlers {
 ` +
       `1. Pilih menu "🔍 Kata Kunci"
 ` +
-      `2. Pilih "➕ Add Keyword"
+      `2. Pilih "➕ Tambah Kata Kunci"
 ` +
       `3. Masukkan kata kunci (contoh: konstruksi)
 
 ` +
       `🔹 PENGATURAN:
 ` +
-      `1. Pilih menu "⚙️ Settings"
+      `1. Pilih menu "⚙️ Pengaturan"
 ` +
       `2. Anda dapat mengatur:
 ` +
@@ -141,7 +141,7 @@ class CommandHandlers {
 ` +
       `🔹 MELIHAT PROFIL:
 ` +
-      `1. Pilih menu "👤 Profile"
+      `1. Pilih menu "👤 Profil"
 ` +
       `2. Anda akan melihat informasi profil Anda
 

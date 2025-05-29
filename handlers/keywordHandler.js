@@ -8,7 +8,7 @@ class KeywordHandler {
     this.userStateManager = userStateManager;
   }
 
-  // Handle add keyword
+  // Handle Tambah Kata kunci
   handleAddKeyword(chatId, keyword) {
     if (this.dataManager.addKeyword(chatId, keyword)) {
       this.bot.sendMessage(chatId, `✅ Keyword "${keyword}" berhasil ditambahkan!`, this.keyboards.getKeywordsKeyboard());
@@ -18,7 +18,7 @@ class KeywordHandler {
     this.userStateManager.clearState(chatId);
   }
 
-  // Handle view keywords
+  // Handle Lihat Kata kuncis
   handleViewKeywords(chatId) {
     const user = this.dataManager.getUser(chatId);
     const keywords = user.keywords;
@@ -31,7 +31,7 @@ class KeywordHandler {
     }
   }
 
-  // Handle delete keyword menu
+  // Handle Hapus Kata Kunci menu
   handleDeleteKeywordMenu(chatId) {
     const user = this.dataManager.getUser(chatId);
     const keywords = user.keywords;
@@ -47,7 +47,7 @@ class KeywordHandler {
     }
   }
 
-  // Handle delete keyword
+  // Handle Hapus Kata Kunci
   handleDeleteKeyword(chatId, text) {
     const index = parseInt(text) - 1;
     const deletedKeyword = this.dataManager.removeKeyword(chatId, index);

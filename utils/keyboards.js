@@ -19,14 +19,14 @@ function getMainMenuKeyboard(chatId) {
   // Keyboard untuk admin (dengan tombol toggle Monitoring)
   if (isAdmin) {
     const monitoringButton = monitoringStatus ? 
-      '🔴 Stop Monitoring' : '🟢 Start Monitoring';
+      '🔴 Berhenti Monitoring' : '🟢 Mulai Monitoring';
       
     return {
       reply_markup: {
         keyboard: [
           ['📊 Daftar KBLI', '🔍 Daftar Kata Kunci'],
-          ['⚙️ Settings', monitoringButton],
-          ['📈 Status', '👤 Profile'],
+          ['⚙️ Pengaturan', monitoringButton],
+          ['📈 Status', '👤 Profil'],
           ['🔄 Set Masa Aktif', '❓ Bantuan']
         ],
         resize_keyboard: true,
@@ -40,8 +40,8 @@ function getMainMenuKeyboard(chatId) {
       reply_markup: {
         keyboard: [
           ['📊 Daftar KBLI', '🔍 Daftar Kata Kunci'],
-          ['⚙️ Settings', '📈 Status'],
-          ['👤 Profile', '💰 Beli Masa Aktif'],
+          ['⚙️ Pengaturan', '📈 Status'],
+          ['👤 Profil', '💰 Beli Masa Aktif'],
           ['❓ Bantuan']
         ],
         resize_keyboard: true,
@@ -56,7 +56,7 @@ function getMainMenuKeyboard(chatId) {
       reply_markup: {
         keyboard: [
           ['➕ Tambah KBLI', '📋 Lihat KBLI'],
-          ['🗑️ Delete KBLI', '🏠 Back to Menu']
+          ['🗑️ Hapus KBLI', '🏠 Kembali ke Menu']
         ],
         resize_keyboard: true,
         one_time_keyboard: false
@@ -70,7 +70,7 @@ function getMainMenuKeyboard(chatId) {
       reply_markup: {
         keyboard: [
           ['➕ Tambah Kata Kunci', '📋 Lihat Kata Kunci'],
-          ['🗑️ Delete Keyword', '🏠 Back to Menu']
+          ['🗑️ Hapus Kata Kunci', '🏠 Kembali ke Menu']
         ],
         resize_keyboard: true,
         one_time_keyboard: false
@@ -85,13 +85,13 @@ function getMainMenuKeyboard(chatId) {
         inline_keyboard: [
           [
             {
-              text: user.includeNonTender ? '✅ Include Non Tender' : '❌ Include Non Tender',
+              text: user.includeNonTender ? '✅ Termasuk Non Tender' : '❌ Tidak Termasuk Non Tender',
               callback_data: 'toggle_non_tender'
             }
           ],
           [
             {
-              text: user.isActive ? '✅ User Active' : '❌ User Active',
+              text: user.isActive ? '✅ Aktif' : '❌ Nonaktif',
               callback_data: 'toggle_user_active'
             }
           ],

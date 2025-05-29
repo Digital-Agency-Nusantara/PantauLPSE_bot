@@ -32,7 +32,7 @@ class CallbackHandlers {
         
         // Send feedback
         this.bot.answerCallbackQuery(callbackQuery.id, { 
-          text: `Include Non Tender: ${newSetting ? '✅ Yes' : '❌ No'}` 
+          text: `Termasuk Non Tender: ${newSetting ? '✅ Yes' : '❌ No'}` 
         });
         break;
         

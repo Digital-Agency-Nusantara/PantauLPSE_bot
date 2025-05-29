@@ -8,7 +8,7 @@ class KbliHandler {
     this.userStateManager = userStateManager;
   }
 
-  // Handle add KBLI
+  // Handle Tambah KBLI
   handleAddKbli(chatId, kbli) {
     if (this.dataManager.addKbli(chatId, kbli)) {
       this.bot.sendMessage(chatId, `✅ KBLI ${kbli} berhasil ditambahkan!`, this.keyboards.getKbliKeyboard());
@@ -18,7 +18,7 @@ class KbliHandler {
     this.userStateManager.clearState(chatId);
   }
 
-  // Handle view KBLI
+  // Handle Lihat KBLI
   handleViewKbli(chatId) {
     const user = this.dataManager.getUser(chatId);
     const kbliList = user.kbliList;
@@ -31,7 +31,7 @@ class KbliHandler {
     }
   }
 
-  // Handle delete KBLI menu
+  // Handle Hapus KBLI menu
   handleDeleteKbliMenu(chatId) {
     const user = this.dataManager.getUser(chatId);
     const kbliList = user.kbliList;
@@ -47,7 +47,7 @@ class KbliHandler {
     }
   }
 
-  // Handle delete KBLI
+  // Handle Hapus KBLI
   handleDeleteKbli(chatId, text) {
     const index = parseInt(text) - 1;
     const deletedKbli = this.dataManager.removeKbli(chatId, index);
