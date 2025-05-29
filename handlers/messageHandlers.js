@@ -398,7 +398,15 @@ Admin: ${config.ADMIN_TELE}`);
         this.keywordHandler.handleDeleteKeyword(chatId, text);
         break;
       case 'awaiting_set_expiry':
-        this.handleSetExpiry(chatId, text);
+        if (text === '❌ BATAL') {
+          this.userStateManager.clearState(chatId);
+          this.bot.sendMessage(chatId, 
+            '❌ Proses set masa aktif dibatalkan.',
+            this.keyboards.getMainMenuKeyboard(chatId)
+          );
+        } else {
+          this.handleSetExpiry(chatId, text);
+        }
         break;
       default:
         this.handleMenuSelection(chatId, text);
@@ -486,8 +494,18 @@ Admin: ${config.ADMIN_TELE}`);
       'Silakan masukkan ID pengguna dan durasi masa aktif dengan format:\n' +
       '`<user_id> <durasi_hari>`\n\n' +
       'Contoh: `123456789 30` untuk memberikan masa aktif 30 hari\n\n' +
-      'Untuk melihat ID pengguna, minta pengguna mengirimkan perintah /start atau melihat profilnya.',
-      { parse_mode: 'Markdown' }
+      'Untuk melihat ID pengguna, minta pengguna mengirimkan perintah /start atau melihat profilnya.\n\n' +
+      'Ketik *BATAL* untuk membatalkan proses.',
+      { 
+        parse_mode: 'Markdown',
+        reply_markup: {
+          keyboard: [
+            ['❌ BATAL']
+          ],
+          resize_keyboard: true,
+          one_time_keyboard: true
+        }
+      }
     );
     
     // Set user state
