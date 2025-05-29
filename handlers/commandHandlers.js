@@ -52,9 +52,9 @@ class CommandHandlers {
         `📢 Total Notifikasi: ${user.sentTenders.length} tender\n` +
         `🤖 Status Monitoring: ${stats.isActive ? '🟢 AKTIF' : '🔴 NONAKTIF'}\n\n` +
         `🆘 BUTUH BANTUAN?\n` +
-        `📞 Admin: @sddq27\n` +
+        `📞 Admin: ${config.ADMIN_TELE}\n` +
         `💬 Panduan: /help\n` +
-        `📱 CS: wa.me/6288286783842\n\n` +
+        `📱 CS Whatsapp: ${config.ADMIN_WA}\n\n` +
         `Pilih menu di bawah untuk mulai:`,
         this.keyboards.getMainMenuKeyboard(chatId)
       );
@@ -146,9 +146,8 @@ class CommandHandlers {
 ` +
       `🔹 BUTUH BANTUAN LEBIH LANJUT?
 ` +
-      `Hubungi admin kami di @sddq27 atau
-` +
-      `Customer Service: wa.me/6288286783842`;
+      `📞 Hubungi Admin: ${config.ADMIN_TELE}\n` +
+      `📱 Customer Service: ${config.ADMIN_WA}`;
     
     this.bot.sendMessage(chatId, helpMessage, this.keyboards.getMainMenuKeyboard(chatId));
   }
