@@ -53,19 +53,19 @@
   "7034660678": {
     "chatId": 7034660678,
     "name": "Shiddiq",
-    "company": "PT Dias",
-    "whatsapp": "01029902109902",
+    "company": "PT ABC",
+    "whatsapp": "0818200808210",
     "username": "januw1",
-    "registeredAt": "2025-05-29T04:14:41.127Z",
-    "expiryDate": "2025-07-08T04:46:41.376Z",
+    "registeredAt": "2025-05-29T14:05:44.880Z",
+    "expiryDate": "2025-06-05T14:05:44.869Z",
     "kbliList": [
-      "82882"
+      "12122"
     ],
     "keywords": [
-      "kontruksi"
+      "koasd"
     ],
-    "includeNonTender": false,
-    "isActive": false,
+    "includeNonTender": true,
+    "isActive": true,
     "sentTenders": []
   }
 }

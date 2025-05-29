@@ -124,14 +124,21 @@ class MessageHandlers {
     this.userStateManager.clearState(chatId);
     
     // Send success message
+    const user = this.dataManager.getUser(chatId);
+    const expiryDate = new Date(user.expiryDate);
+    const now = new Date();
+    const diffTime = expiryDate - now;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
     this.bot.sendMessage(chatId, 
-      `✅ Registrasi berhasil! Selamat datang ${userData.name}!\n\n` +
-      `Data Anda:\n` +
+      `✅ Registrasi berhasil! Selamat datang ${userData.name}! Masa Aktif ${diffDays} hari.
+
+` +
+      `Data Anda:
+` +
       `👤 Nama: ${userData.name}\n` +
       `🏢 Perusahaan: ${userData.company}\n` +
-      `📱 WhatsApp: ${userData.whatsapp}\n` +
-      `📊 KBLI: ${kbli}\n` +
-      `🔍 Keyword: ${keyword}\n\n` +
+      `📱 WhatsApp: ${userData.whatsapp}\n\n` +
       `Anda akan mulai menerima informasi tender yang sesuai dengan KBLI dan keyword Anda.\n\n` +
       `Jika Anda ingin menambahkan KBLI atau keyword lainnya, silakan gunakan menu KBLI Management dan Keywords Management.`,
       this.keyboards.getMainMenuKeyboard(chatId)
