@@ -41,7 +41,8 @@ function getMainMenuKeyboard(chatId) {
         keyboard: [
           ['📊 KBLI Management', '🔍 Keywords Management'],
           ['⚙️ Settings', '📈 Status'],
-          ['👤 Profile', '❓ Bantuan']
+          ['👤 Profile', '💰 Beli Masa Aktif'],
+          ['❓ Bantuan']
         ],
         resize_keyboard: true,
         one_time_keyboard: false
@@ -92,6 +93,12 @@ function getMainMenuKeyboard(chatId) {
             {
               text: user.isActive ? '✅ User Active' : '❌ User Active',
               callback_data: 'toggle_user_active'
+            }
+          ],
+          [
+            {
+              text: '💰 Beli Masa Aktif',
+              url: config.ADMIN_WA
             }
           ]
         ]

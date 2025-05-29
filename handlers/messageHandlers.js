@@ -233,6 +233,16 @@ class MessageHandlers {
         break;
         
       // Keywords Menu
+      case '💰 Beli Masa Aktif':
+        this.bot.sendMessage(chatId, `Untuk membeli masa aktif, silakan hubungi admin melalui WhatsApp:
+
+${config.ADMIN_WA}
+
+Admin akan membantu Anda dengan proses pembayaran dan pengaktifan akun.
+
+Admin: ${config.ADMIN_TELE}`);
+        break;
+        
       case '➕ Add Keyword':
         this.bot.sendMessage(chatId, 'Masukkan keyword (contoh: konstruksi):');
         this.userStateManager.setState(chatId, 'awaiting_keyword');

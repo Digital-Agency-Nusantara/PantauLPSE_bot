@@ -9,6 +9,8 @@ const config = {
     
     // Admin settings
     ADMIN_IDS: ['262323498'],
+    ADMIN_WA: 'https://wa.me/6288286783842',
+    ADMIN_TELE: '@sddq27',
     
     // Scraping settings
     SCRAPING_INTERVAL: 300000, // 5 minutes
