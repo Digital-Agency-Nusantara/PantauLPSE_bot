@@ -27,7 +27,7 @@ function getMainMenuKeyboard(chatId) {
           ['📊 KBLI Management', '🔍 Keywords Management'],
           ['⚙️ Settings', monitoringButton],
           ['📈 Status', '👤 Profile'],
-          ['❓ Bantuan']
+          ['🔄 Set Masa Aktif', '❓ Bantuan']
         ],
         resize_keyboard: true,
         one_time_keyboard: false

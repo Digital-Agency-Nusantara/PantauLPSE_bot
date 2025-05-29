@@ -193,6 +193,10 @@ class MessageHandlers {
         this.handleProfile(chatId);
         break;
         
+      case '🔄 Set Masa Aktif':
+        this.handleSetMasaAktif(chatId);
+        break;
+        
       case '❓ Bantuan':
         // Panggil fungsi handleHelp dari commandHandlers
         if (this.commandHandlers) {
@@ -284,7 +288,7 @@ class MessageHandlers {
     const stats = this.monitoringService.getStatus();
     
     const message = `📈 Status Bot:\n\n` +
-                   `🤖 Monitoring: ${stats.isActive ? '🟢 Active' : '🔴 Inactive'}\n` +
+                   `🤖 Monitoring: ${stats.isActive ? '🟢 Active' : '🔴 Inactive'}\n\n` +
                   //  `👥 Total Users: ${stats.totalUsers}\n` +
                   //  `✅ Active Users: ${stats.activeUsers}\n\n` +
                    `📊 Your Data:\n` +
@@ -300,16 +304,34 @@ class MessageHandlers {
   // Handle profile
   handleProfile(chatId) {
     const user = this.dataManager.getUser(chatId);
-    const message = `👤 Profile:\n\n` +
-                   `📛 Name: ${user.name}\n` +
-                   `🏢 Company: ${user.company || 'Not provided'}\n` +
-                   `📱 WhatsApp: ${user.whatsapp || 'Not provided'}\n` +
-                   `📲 Telegram: ${user.username ? '@' + user.username : 'Not provided'}\n` +
+    if (!user) {
+      this.bot.sendMessage(chatId, '❌ User tidak ditemukan.');
+      return;
+    }
+    
+    // Format expiry date
+    let expiryInfo = '';
+    if (user.expiryDate) {
+      const expiryDate = new Date(user.expiryDate);
+      const formattedExpiryDate = expiryDate.toLocaleDateString('id-ID');
+      expiryInfo = `📅 Masa Aktif: ${formattedExpiryDate}\n`;
+    }
+    
+    // Check if user is expired
+    const isExpired = this.dataManager.isUserExpired(chatId);
+    const statusText = isExpired ? '🔴 EXPIRED' : '🟢 ACTIVE';
+    
+    const message = `👤 PROFIL PENGGUNA\n\n` +
+                   `Nama: ${user.name}\n` +
+                   `Perusahaan: ${user.company || '-'}\n` +
+                   `WhatsApp: ${user.whatsapp || '-'}\n\n` +
                    `🔒 Chat ID: ${user.chatId}\n` +
-                   `📅 Registered: ${new Date(user.registeredAt).toLocaleDateString('id-ID')}\n` +
-                   `📊 KBLI Count: ${user.kbliList.length}\n` +
-                   `🔍 Keywords Count: ${user.keywords.length}\n` +
-                   `📢 Total Notifications: ${user.sentTenders.length}`;
+                   `Terdaftar: ${new Date(user.registeredAt).toLocaleDateString('id-ID')}\n` +
+                   `${expiryInfo}` +
+                   `Status: ${statusText}\n\n` +
+                   `📊 KBLI Terdaftar: ${user.kbliList.length}\n` +
+                   `🔍 Keyword Terdaftar: ${user.keywords.length}\n` +
+                   `📱 Notifikasi Diterima: ${user.sentTenders ? user.sentTenders.length : 0}`;
     
     this.bot.sendMessage(chatId, message, this.keyboards.getMainMenuKeyboard(chatId));
   }
@@ -352,9 +374,101 @@ class MessageHandlers {
       case 'awaiting_delete_keyword':
         this.keywordHandler.handleDeleteKeyword(chatId, text);
         break;
+      case 'awaiting_set_expiry':
+        this.handleSetExpiry(chatId, text);
+        break;
       default:
         this.handleMenuSelection(chatId, text);
     }
+  }
+  
+  // Handle setting expiry date for a user (admin only)
+  handleSetExpiry(chatId, text) {
+    // Check if user is admin
+    if (!config.ADMIN_IDS.includes(chatId.toString())) {
+      this.bot.sendMessage(chatId, '❌ Maaf, hanya admin yang dapat mengatur masa aktif pengguna.');
+      this.userStateManager.clearState(chatId);
+      return;
+    }
+    
+    // Parse input: <user_id> <duration_days>
+    const parts = text.trim().split(' ');
+    if (parts.length !== 2) {
+      this.bot.sendMessage(chatId, 
+        '❌ Format tidak valid. Gunakan format: <user_id> <durasi_hari>\n\n' +
+        'Contoh: 123456789 30'  
+      );
+      return;
+    }
+    
+    const targetUserId = parts[0];
+    const durationDays = parseInt(parts[1]);
+    
+    if (isNaN(durationDays) || durationDays <= 0) {
+      this.bot.sendMessage(chatId, '❌ Durasi harus berupa angka positif.');
+      return;
+    }
+    
+    // Check if target user exists
+    const targetUser = this.dataManager.getUser(targetUserId);
+    if (!targetUser) {
+      this.bot.sendMessage(chatId, `❌ User dengan ID ${targetUserId} tidak ditemukan.`);
+      return;
+    }
+    
+    // Update user expiry
+    const success = this.dataManager.updateUserExpiry(targetUserId, durationDays);
+    
+    if (success) {
+      // If user was expired, reactivate them
+      if (!targetUser.isActive) {
+        targetUser.isActive = true;
+        this.dataManager.saveData();
+      }
+      
+      // Calculate new expiry date
+      const expiryDate = new Date(targetUser.expiryDate);
+      const formattedExpiryDate = expiryDate.toLocaleDateString('id-ID');
+      
+      this.bot.sendMessage(chatId, 
+        `✅ Masa aktif untuk user ${targetUser.name} (ID: ${targetUserId}) berhasil diperbarui.\n\n` +
+        `Masa aktif baru: ${formattedExpiryDate} (${durationDays} hari)\n` +
+        `Status: 🟢 ACTIVE`
+      );
+      
+      // Notify the target user
+      this.bot.sendMessage(targetUserId, 
+        `🔔 Masa aktif akun Anda telah diperbarui oleh admin.\n\n` +
+        `Masa aktif baru: ${formattedExpiryDate} (${durationDays} hari)\n` +
+        `Status: 🟢 ACTIVE`
+      );
+    } else {
+      this.bot.sendMessage(chatId, `❌ Gagal memperbarui masa aktif user ${targetUserId}.`);
+    }
+    
+    // Clear state
+    this.userStateManager.clearState(chatId);
+  }
+  
+  // Handle Set Masa Aktif menu
+  handleSetMasaAktif(chatId) {
+    // Check if user is admin
+    if (!config.ADMIN_IDS.includes(chatId.toString())) {
+      this.bot.sendMessage(chatId, '❌ Maaf, hanya admin yang dapat mengatur masa aktif pengguna.');
+      return;
+    }
+    
+    this.bot.sendMessage(chatId, 
+      '🔄 *SET MASA AKTIF PENGGUNA*\n\n' +
+      'Silakan masukkan ID pengguna dan durasi masa aktif dengan format:\n' +
+      '`<user_id> <durasi_hari>`\n\n' +
+      'Contoh: `123456789 30` untuk memberikan masa aktif 30 hari\n\n' +
+      'Untuk melihat ID pengguna, minta pengguna mengirimkan perintah /start atau melihat profilnya.',
+      { parse_mode: 'Markdown' }
+    );
+    
+    // Set user state
+    this.userStateManager.setState(chatId, 'awaiting_set_expiry');
   }
 
   // Register message handler

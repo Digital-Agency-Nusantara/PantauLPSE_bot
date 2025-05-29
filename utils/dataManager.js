@@ -51,13 +51,18 @@ class DataManager {
   }
 
   createUser(chatId, userData) {
+    // Set default expiry date to 7 days from now
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 7); // Default 30 days
+    
     this.users[chatId.toString()] = {
-      chatId: chatId,
-      name: userData.name,
+      chatId: parseInt(chatId),
+      name: userData.name || '',
       company: userData.company || '',
       whatsapp: userData.whatsapp || '',
       username: userData.username || '',
       registeredAt: new Date().toISOString(),
+      expiryDate: userData.expiryDate || expiryDate.toISOString(),
       kbliList: [],
       keywords: [],
       includeNonTender: true,
@@ -65,10 +70,51 @@ class DataManager {
       sentTenders: []
     };
     this.saveData();
+    return this.users[chatId.toString()];
   }
 
   getUser(chatId) {
     return this.users[chatId.toString()];
+  }
+  
+  // Check if user account is expired
+  isUserExpired(chatId) {
+    const user = this.getUser(chatId);
+    if (!user || !user.expiryDate) return false;
+    
+    const now = new Date();
+    const expiryDate = new Date(user.expiryDate);
+    
+    return now > expiryDate;
+  }
+  
+  // Update user expiry date
+  updateUserExpiry(chatId, durationDays) {
+    const user = this.getUser(chatId);
+    if (!user) return false;
+    
+    // Jika pengguna sudah memiliki tanggal kedaluwarsa, tambahkan durasi dari tanggal tersebut
+    // Jika tidak, gunakan tanggal sekarang sebagai dasar
+    let expiryDate;
+    if (user.expiryDate) {
+      const currentExpiry = new Date(user.expiryDate);
+      // Jika tanggal kedaluwarsa sudah lewat, gunakan tanggal sekarang
+      if (currentExpiry < new Date()) {
+        expiryDate = new Date();
+      } else {
+        expiryDate = currentExpiry;
+      }
+    } else {
+      expiryDate = new Date();
+    }
+    
+    // Tambahkan durasi
+    expiryDate.setDate(expiryDate.getDate() + durationDays);
+    
+    user.expiryDate = expiryDate.toISOString();
+    this.saveData();
+    
+    return true;
   }
 
   updateUser(chatId, updates) {
@@ -83,10 +129,32 @@ class DataManager {
   }
 
   getActiveUsers() {
-    return Object.values(this.users).filter(user => 
-      user.isActive && 
-      (user.kbliList.length > 0 || user.keywords.length > 0)
-    );
+    // Update user active status based on expiry date first
+    this.updateAllUserActiveStatus();
+    
+    return Object.values(this.users).filter(user => {
+      return user.isActive && 
+        (user.kbliList.length > 0 || user.keywords.length > 0);
+    });
+  }
+  
+  // Update active status for all users based on expiry date
+  updateAllUserActiveStatus() {
+    const now = new Date();
+    
+    Object.values(this.users).forEach(user => {
+      if (user.expiryDate) {
+        const expiryDate = new Date(user.expiryDate);
+        // If expired, set isActive to false
+        if (now > expiryDate && user.isActive) {
+          user.isActive = false;
+          console.log(`User ${user.chatId} (${user.name}) subscription expired. Setting isActive to false.`);
+        }
+      }
+    });
+    
+    // Save changes to file
+    this.saveData();
   }
 
   // KBLI management
