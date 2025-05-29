@@ -1,7 +1,7 @@
 // config/config.js
 const config = {
     // Bot Token
-    BOT_TOKEN: '7811524585:AAFFvIQJpxkUSHWfKN8M5guTV-RZC8qXhKU',
+    BOT_TOKEN: '7861137372:AAE5koxh2k6Iek6qyUHMSHEhJjMOP7xCEFM',
     
     // File paths
     USERS_FILE: 'bot_users.json',
