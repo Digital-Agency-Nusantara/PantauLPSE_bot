@@ -13,9 +13,9 @@ class SettingsHandler {
     const keyboard = this.keyboards.getSettingsKeyboard(user);
     
     const message = `⚙️ Pengaturan:\n\n` +
-                   `Termasuk Non Tender: ${user.includeNonTender ? '✅ Yes' : '❌ No'}\n` +
-                   `User Status: ${user.isActive ? '✅ Active' : '❌ Inactive'}\n\n` +
-                   `Klik tombol untuk mengubah setting:`;
+                   `Termasuk Non Tender: ${user.includeNonTender ? '✅ Ya' : '❌ Tidak'}\n` +
+                   `Status Pengguna: ${user.isActive ? '✅ Aktif' : '❌ Nonaktif'}\n\n` +
+                   `Klik tombol untuk mengubah pengaturan:`;
     
     this.bot.sendMessage(chatId, message, keyboard);
   }

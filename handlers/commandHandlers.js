@@ -47,7 +47,7 @@ class CommandHandlers {
         `🏠 Selamat datang kembali, ${user.name}!\n\n` +
         `🎯 RINGKASAN AKUN ANDA:\n` +
         `📊 KBLI Terdaftar: ${user.kbliList.length} kode\n` +
-        `🔍 Keywords Aktif: ${user.keywords.length} kata kunci\n` +
+        `🔍 Kata Kunci Aktif: ${user.keywords.length} kata kunci\n` +
         `🌐 URL LPSE: ${this.dataManager.loadUrlsFromFile().length} website\n` +
         `📢 Total Notifikasi: ${user.sentTenders.length} tender\n` +
         `🤖 Status Monitoring: ${stats.isActive ? '🟢 AKTIF' : '🔴 NONAKTIF'}\n\n` +
@@ -78,7 +78,7 @@ class CommandHandlers {
                    `🤖 Monitoring Status: ${stats.isActive ? '🟢 Active' : '🔴 Inactive'}\n` +
                    `📢 Total Notifications Sent: ${stats.totalNotifications}\n` +
                    `📊 Total KBLI Entries: ${stats.totalKbli}\n` +
-                   `🔍 Total Keywords: ${stats.totalKeywords}\n` +
+                   `🔍 Total Kata Kunci: ${stats.totalKeywords}\n` +
                    `🌐 Total URLs: ${stats.totalUrls}\n` +
                    `💾 Bot Uptime: ${process.uptime().toFixed(0)}s`;
     
@@ -112,7 +112,7 @@ class CommandHandlers {
       `4. KBLI akan ditambahkan ke daftar pemantauan Anda
 
 ` +
-      `🔹 MENAMBAHKAN KEYWORD:
+      `🔹 MENAMBAHKAN KATA KUNCI:
 ` +
       `1. Pilih menu "🔍 Kata Kunci"
 ` +

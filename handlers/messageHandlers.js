@@ -305,15 +305,13 @@ Admin: ${config.ADMIN_TELE}`);
     const stats = this.monitoringService.getStatus();
     
     const message = `📈 Status Bot:\n\n` +
-                   `🤖 Monitoring: ${stats.isActive ? '🟢 Active' : '🔴 Inactive'}\n\n` +
-                  //  `👥 Total Users: ${stats.totalUsers}\n` +
-                  //  `✅ Active Users: ${stats.activeUsers}\n\n` +
-                   `📊 Your Data:\n` +
-                   `• KBLI: ${user.kbliList.length} items\n` +
-                   `• Keywords: ${user.keywords.length} items\n` +
-                   `• Non Tender: ${user.includeNonTender ? 'Included' : 'Excluded'}\n` +
-                   `• Status: ${user.isActive ? 'Active' : 'Inactive'}\n` +
-                   `• Notifications Sent: ${user.sentTenders.length}`;
+                   `🤖 Monitoring: ${stats.isActive ? '🟢 Aktif' : '🔴 Nonaktif'}\n\n` +
+                   `📊 Data Anda:\n` +
+                   `• KBLI: ${user.kbliList.length} item\n` +
+                   `• Kata Kunci: ${user.keywords.length} item\n` +
+                   `• Non Tender: ${user.includeNonTender ? 'Termasuk' : 'Tidak Termasuk'}\n` +
+                   `• Status: ${user.isActive ? 'Aktif' : 'Nonaktif'}\n` +
+                   `• Notifikasi Terkirim: ${user.sentTenders.length}`;
     
     this.bot.sendMessage(chatId, message, this.keyboards.getMainMenuKeyboard(chatId));
   }
