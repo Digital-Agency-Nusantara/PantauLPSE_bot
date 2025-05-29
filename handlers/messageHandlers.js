@@ -111,7 +111,7 @@ class MessageHandlers {
     // Create user
     this.dataManager.createUser(chatId, userData);
     
-    // Add KBLI
+    // Tambah KBLI
     const kbli = this.userStateManager.getTempData(chatId, 'kbli');
     this.dataManager.addKbli(chatId, kbli);
     
@@ -139,8 +139,8 @@ class MessageHandlers {
       `👤 Nama: ${userData.name}\n` +
       `🏢 Perusahaan: ${userData.company}\n` +
       `📱 WhatsApp: ${userData.whatsapp}\n\n` +
-      `Anda akan mulai menerima informasi tender yang sesuai dengan KBLI dan keyword Anda.\n\n` +
-      `Jika Anda ingin menambahkan KBLI atau keyword lainnya, silakan gunakan menu KBLI Management dan Keywords Management.`,
+      `Anda akan mulai menerima informasi tender yang sesuai dengan KBLI dan Kata kunci Anda.\n\n` +
+      `Jika Anda ingin menambahkan KBLI atau Kata kunci lainnya, silakan gunakan menu Daftar KBLI dan Daftar Kata Kunci.`,
       this.keyboards.getMainMenuKeyboard(chatId)
     );
   }
@@ -172,12 +172,12 @@ class MessageHandlers {
   // Handle menu selection
   handleMenuSelection(chatId, text) {
     switch (text) {
-      case '📊 KBLI Management':
-        this.bot.sendMessage(chatId, '📊 KBLI Management Menu:', this.keyboards.getKbliKeyboard());
+      case '📊 Daftar KBLI':
+        this.bot.sendMessage(chatId, '📊 Daftar KBLI Menu:', this.keyboards.getKbliKeyboard());
         break;
         
-      case '🔍 Keywords Management':
-        this.bot.sendMessage(chatId, '🔍 Keywords Management Menu:', this.keyboards.getKeywordsKeyboard());
+      case '🔍 Daftar Kata Kunci':
+        this.bot.sendMessage(chatId, '🔍 Daftar Kata Kunci Menu:', this.keyboards.getKeywordsKeyboard());
         break;
         
       case '⚙️ Settings':

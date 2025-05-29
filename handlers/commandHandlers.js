@@ -103,16 +103,18 @@ class CommandHandlers {
 ` +
       `🔹 MENAMBAHKAN KBLI:
 ` +
-      `1. Pilih menu "📊 KBLI Management"
+      `1. Pilih menu "📊 Daftar KBLI"
 ` +
-      `2. Pilih "➕ Add KBLI"
+      `2. Anda akan melihat daftar KBLI yang tersedia
 ` +
-      `3. Masukkan kode KBLI (contoh: 41001)
+      `3. Pilih KBLI yang sesuai dengan bidang usaha Anda (contoh: 41001)
+` +
+      `4. KBLI akan ditambahkan ke daftar pemantauan Anda
 
 ` +
       `🔹 MENAMBAHKAN KEYWORD:
 ` +
-      `1. Pilih menu "🔍 Keywords Management"
+      `1. Pilih menu "🔍 Kata Kunci"
 ` +
       `2. Pilih "➕ Add Keyword"
 ` +

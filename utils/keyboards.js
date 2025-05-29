@@ -24,7 +24,7 @@ function getMainMenuKeyboard(chatId) {
     return {
       reply_markup: {
         keyboard: [
-          ['📊 KBLI Management', '🔍 Keywords Management'],
+          ['📊 Daftar KBLI', '🔍 Daftar Kata Kunci'],
           ['⚙️ Settings', monitoringButton],
           ['📈 Status', '👤 Profile'],
           ['🔄 Set Masa Aktif', '❓ Bantuan']
@@ -39,7 +39,7 @@ function getMainMenuKeyboard(chatId) {
     return {
       reply_markup: {
         keyboard: [
-          ['📊 KBLI Management', '🔍 Keywords Management'],
+          ['📊 Daftar KBLI', '🔍 Daftar Kata Kunci'],
           ['⚙️ Settings', '📈 Status'],
           ['👤 Profile', '💰 Beli Masa Aktif'],
           ['❓ Bantuan']
@@ -50,12 +50,12 @@ function getMainMenuKeyboard(chatId) {
     };
   }
   
-  // KBLI Management Keyboard
+  // Daftar KBLI Keyboard
   function getKbliKeyboard() {
     return {
       reply_markup: {
         keyboard: [
-          ['➕ Add KBLI', '📋 View KBLI'],
+          ['➕ Tambah KBLI', '📋 Lihat KBLI'],
           ['🗑️ Delete KBLI', '🏠 Back to Menu']
         ],
         resize_keyboard: true,
@@ -64,12 +64,12 @@ function getMainMenuKeyboard(chatId) {
     };
   }
   
-  // Keywords Management Keyboard
+  // Daftar Kata Kunci Keyboard
   function getKeywordsKeyboard() {
     return {
       reply_markup: {
         keyboard: [
-          ['➕ Add Keyword', '📋 View Keywords'],
+          ['➕ Tambah Kata Kunci', '📋 Lihat Kata Kunci'],
           ['🗑️ Delete Keyword', '🏠 Back to Menu']
         ],
         resize_keyboard: true,
