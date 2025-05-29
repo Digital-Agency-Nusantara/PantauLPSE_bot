@@ -118,10 +118,16 @@ class DataManager {
   }
 
   updateUser(chatId, updates) {
-    if (this.users[chatId.toString()]) {
-      Object.assign(this.users[chatId.toString()], updates);
-      this.saveData();
-    }
+    const user = this.users[chatId.toString()];
+    if (!user) return false;
+    
+    // Update user data
+    Object.assign(user, updates);
+    
+    // Save changes
+    this.saveData();
+    
+    return true;
   }
 
   getAllUsers() {

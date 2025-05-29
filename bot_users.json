@@ -64,8 +64,8 @@
     "keywords": [
       "kontruksi"
     ],
-    "includeNonTender": true,
-    "isActive": true,
+    "includeNonTender": false,
+    "isActive": false,
     "sentTenders": []
   }
 }

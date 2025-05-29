@@ -15,16 +15,58 @@ class CallbackHandlers {
     switch (data) {
       case 'toggle_non_tender':
         const user = this.dataManager.getUser(chatId);
-        this.dataManager.updateUser(chatId, { includeNonTender: !user.includeNonTender });
+        if (!user) {
+          this.bot.answerCallbackQuery(callbackQuery.id, { 
+            text: 'User tidak ditemukan.', 
+            show_alert: true 
+          });
+          return;
+        }
+        
+        // Update setting
+        const newSetting = !user.includeNonTender;
+        this.dataManager.updateUser(chatId, { includeNonTender: newSetting });
+        
+        // Update display
         this.settingsHandler.handleSettings(chatId);
-        this.bot.answerCallbackQuery(callbackQuery.id, { text: 'Setting updated!' });
+        
+        // Send feedback
+        this.bot.answerCallbackQuery(callbackQuery.id, { 
+          text: `Include Non Tender: ${newSetting ? '✅ Yes' : '❌ No'}` 
+        });
         break;
         
       case 'toggle_user_active':
         const userActive = this.dataManager.getUser(chatId);
-        this.dataManager.updateUser(chatId, { isActive: !userActive.isActive });
+        if (!userActive) {
+          this.bot.answerCallbackQuery(callbackQuery.id, { 
+            text: 'User tidak ditemukan.', 
+            show_alert: true 
+          });
+          return;
+        }
+        
+        // Check if user is expired before updating status
+        const isExpired = this.dataManager.isUserExpired(chatId);
+        if (isExpired && !userActive.isActive) {
+          this.bot.answerCallbackQuery(callbackQuery.id, { 
+            text: 'Masa aktif akun Anda telah berakhir. Silakan hubungi admin untuk perpanjangan.', 
+            show_alert: true 
+          });
+          return;
+        }
+        
+        // Update setting
+        const newActiveStatus = !userActive.isActive;
+        this.dataManager.updateUser(chatId, { isActive: newActiveStatus });
+        
+        // Update display
         this.settingsHandler.handleSettings(chatId);
-        this.bot.answerCallbackQuery(callbackQuery.id, { text: 'Setting updated!' });
+        
+        // Send feedback
+        this.bot.answerCallbackQuery(callbackQuery.id, { 
+          text: `User Status: ${newActiveStatus ? '✅ Active' : '❌ Inactive'}` 
+        });
         break;
     }
   }
