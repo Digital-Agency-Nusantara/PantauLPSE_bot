@@ -87,6 +87,21 @@ class DataManager {
     
     return now > expiryDate;
   }
+
+  // Get remaining days until expiry
+  getRemainingDays(chatId) {
+    const user = this.getUser(chatId);
+    if (!user || !user.expiryDate) return null;
+    
+    const now = new Date();
+    const expiryDate = new Date(user.expiryDate);
+    
+    // Calculate remaining days
+    const diffTime = expiryDate - now;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    return diffDays;
+  }
   
   // Update user expiry date
   updateUserExpiry(chatId, durationDays) {

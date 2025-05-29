@@ -314,7 +314,15 @@ class MessageHandlers {
     if (user.expiryDate) {
       const expiryDate = new Date(user.expiryDate);
       const formattedExpiryDate = expiryDate.toLocaleDateString('id-ID');
-      expiryInfo = `📅 Masa Aktif: ${formattedExpiryDate}\n`;
+      const remainingDays = this.dataManager.getRemainingDays(chatId);
+      
+      if (remainingDays === null) {
+        expiryInfo = `📅 Masa Aktif: -\n`;
+      } else if (remainingDays <= 0) {
+        expiryInfo = `📅 Masa Aktif: ${formattedExpiryDate} (EXPIRED)\n`;
+      } else {
+        expiryInfo = `📅 Masa Aktif Hingga: ${formattedExpiryDate} (${remainingDays} hari)\n`;
+      }
     }
     
     // Check if user is expired
