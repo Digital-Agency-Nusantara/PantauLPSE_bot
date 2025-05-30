@@ -256,6 +256,101 @@ Admin: ${config.ADMIN_TELE}`);
         this.keywordHandler.handleDeleteKeywordMenu(chatId);
         break;
         
+      case '👥 Daftar Pengguna': {
+        if (!config.ADMIN_IDS.includes(chatId.toString())) {
+          this.bot.sendMessage(chatId, '❌ Maaf, menu ini hanya untuk admin.');
+          break;
+        }
+        const usersObj = this.dataManager.getAllUsers();
+        const users = Object.values(usersObj);
+        const pageSize = 10;
+        const page = 0;
+        const totalPages = Math.ceil(users.length / pageSize);
+        // Ambil 10 user terakhir (paling baru)
+        const sortedUsers = users.sort((a, b) => new Date(b.registeredAt) - new Date(a.registeredAt));
+        const usersToShow = sortedUsers.slice(page * pageSize, (page + 1) * pageSize);
+        let msg = '👥 *DAFTAR 10 PENGGUNA TERBARU*\n';
+        usersToShow.forEach((user, idx) => {
+          const remainingDays = this.dataManager.getRemainingDays(user.chatId);
+          const status = (remainingDays === null || remainingDays <= 0) ? 'Expired' : 'Aktif';
+          msg += `\n${idx+1 + page * pageSize}. *${user.name}* (${status})\n` +
+                 `   • PT: ${user.company || '-'}\n` +
+                 `   • WhatsApp: ${user.whatsapp || '-'}\n` +
+                 `   • ID: \`${user.chatId}\`\n` +
+                 `   • KBLI: ${user.kbliList.length}\n` +
+                 `   • Keyword: ${user.keywords.length}\n`;
+        });
+        let keyboard = { parse_mode: 'Markdown' };
+        if (users.length > pageSize) {
+          keyboard.reply_markup = {
+            keyboard: [
+              ['Lihat Selanjutnya'],
+              ['🏠 Kembali ke Menu']
+            ],
+            resize_keyboard: true,
+            one_time_keyboard: false
+          };
+          this.userStateManager.setTempData(chatId, 'users_page', 1);
+        } else {
+          keyboard.reply_markup = {
+            keyboard: [
+              ['🏠 Kembali ke Menu']
+            ],
+            resize_keyboard: true,
+            one_time_keyboard: false
+          };
+        }
+        this.userStateManager.setState(chatId, 'viewing_users_page');
+        this.bot.sendMessage(chatId, msg, keyboard);
+        break;
+      }
+      case 'Lihat Selanjutnya': {
+        if (!config.ADMIN_IDS.includes(chatId.toString())) {
+          this.bot.sendMessage(chatId, '❌ Maaf, menu ini hanya untuk admin.');
+          break;
+        }
+        const usersObj = this.dataManager.getAllUsers();
+        const users = Object.values(usersObj);
+        const pageSize = 10;
+        let page = this.userStateManager.getTempData(chatId, 'users_page') || 1;
+        const totalPages = Math.ceil(users.length / pageSize);
+        const sortedUsers = users.sort((a, b) => new Date(b.registeredAt) - new Date(a.registeredAt));
+        const usersToShow = sortedUsers.slice(page * pageSize, (page + 1) * pageSize);
+        let msg = `👥 *DAFTAR PENGGUNA (Halaman ${page+1}/${totalPages})*\n`;
+        usersToShow.forEach((user, idx) => {
+          const remainingDays = this.dataManager.getRemainingDays(user.chatId);
+          const status = (remainingDays === null || remainingDays <= 0) ? 'Expired' : 'Aktif';
+          msg += `\n${idx+1 + page * pageSize}. *${user.name}* (${status})\n` +
+                 `   • PT: ${user.company || '-'}\n` +
+                 `   • WhatsApp: ${user.whatsapp || '-'}\n` +
+                 `   • ID: \`${user.chatId}\`\n` +
+                 `   • KBLI: ${user.kbliList.length}\n` +
+                 `   • Keyword: ${user.keywords.length}\n`;
+        });
+        let keyboard = { parse_mode: 'Markdown' };
+        if ((page + 1) * pageSize < users.length) {
+          keyboard.reply_markup = {
+            keyboard: [
+              ['Lihat Selanjutnya'],
+              ['🏠 Kembali ke Menu']
+            ],
+            resize_keyboard: true,
+            one_time_keyboard: false
+          };
+          this.userStateManager.setTempData(chatId, 'users_page', page + 1);
+        } else {
+          keyboard.reply_markup = {
+            keyboard: [
+              ['🏠 Kembali ke Menu']
+            ],
+            resize_keyboard: true,
+            one_time_keyboard: false
+          };
+          this.userStateManager.setTempData(chatId, 'users_page', 0);
+        }
+        this.bot.sendMessage(chatId, msg, keyboard);
+        break;
+      }
       default:
         this.bot.sendMessage(chatId, 'Menu tidak dikenali. Pilih dari menu yang tersedia.', this.keyboards.getMainMenuKeyboard(chatId));
     }
@@ -487,31 +582,13 @@ Admin: ${config.ADMIN_TELE}`);
       return;
     }
 
-    // Get all users and convert to array if it's an object
-    const users = this.dataManager.getAllUsers();
-    const usersArray = users instanceof Array ? users : Object.values(users);
-    
-    // Create user list message
-    let message = '📋 *DAFTAR PENGGUNA*\n\n';
-    
-    usersArray.forEach(user => {
-      const remainingDays = this.dataManager.getRemainingDays(user.chatId);
-      const remainingDaysText = remainingDays === null ? 'Tidak Aktif' : 
-                               remainingDays <= 0 ? 'EXPIRED' : 
-                               `${remainingDays} hari`;
-      
-      message += `*${user.name}*\n`;
-      message += `PT: ${user.company || '-'}\n`;
-      message += `ID: \`${user.chatId}\`\n`;
-      message += `Masa Aktif: ${remainingDaysText}\n\n`;
-    });
-    
-    message += '🔄 *SET MASA AKTIF PENGGUNA*\n\n' +
-              'Silakan masukkan ID pengguna dan durasi masa aktif dengan format:\n' +
-              '`<user_id> <durasi_hari>`\n\n' +
-              'Contoh: `123456789 30` untuk memberikan masa aktif 30 hari\n\n' +
-              'Ketik *BATAL* untuk membatalkan proses.';
-    
+    // Pesan instruksi saja, tanpa daftar user
+    let message = '🔄 *SET MASA AKTIF PENGGUNA*\n\n' +
+                  'Silakan masukkan ID pengguna dan durasi masa aktif dengan format:\n' +
+                  '`<user_id> <durasi_hari>`\n\n' +
+                  'Contoh: `123456789 30` untuk memberikan masa aktif 30 hari\n\n' +
+                  'Ketik *BATAL* untuk membatalkan proses.';
+
     this.bot.sendMessage(chatId, message, { 
       parse_mode: 'Markdown',
       reply_markup: {
@@ -522,7 +599,7 @@ Admin: ${config.ADMIN_TELE}`);
         one_time_keyboard: true
       }
     });
-    
+
     // Set user state
     this.userStateManager.setState(chatId, 'awaiting_set_expiry');
   }
