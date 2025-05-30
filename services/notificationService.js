@@ -77,7 +77,7 @@ class NotificationService {
       '📦 Nama Paket: ' + namaPaket + '\n' +
       '⚖️ Jenis Pengadaan: ' + jenisPengadaan + '\n' +
       '🔢 Kode Tender: ' + kodeTender + '\n' +
-      '📊 Kode KBLI: ' + (matchedKbli.length > 0 ? matchedKbli.join(', ') : 'Keyword Match') + '\n' +
+      '📊 Kode KBLI: ' + (matchedKbli.length > 0 ? matchedKbli.join(', ') : '-') + '\n' +
       '💰 HPS: ' + hps + '\n' +
       '📅 Tanggal Akhir: ' + tanggalAkhir + '\n\n' +
       (finalMatchKbli ? '✅ Match: KBLI\n' : '') +
