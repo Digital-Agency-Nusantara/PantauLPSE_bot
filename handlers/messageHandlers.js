@@ -220,7 +220,7 @@ class MessageHandlers {
         
       // KBLI Menu
       case '➕ Tambah KBLI':
-        this.bot.sendMessage(chatId, 'Masukkan kode KBLI (contoh: 41001):');
+        this.bot.sendMessage(chatId, 'Masukkan kode KBLI, bisa lebih dari satu dipisahkan koma (contoh: 41001, 42101, 42999):');
         this.userStateManager.setState(chatId, 'awaiting_kbli');
         break;
         
@@ -244,7 +244,7 @@ Admin: ${config.ADMIN_TELE}`);
         break;
         
       case '➕ Tambah Kata Kunci':
-        this.bot.sendMessage(chatId, 'Masukkan keyword (contoh: konstruksi):');
+        this.bot.sendMessage(chatId, 'Masukkan Kata Kunci, bisa lebih dari satu dipisahkan koma (contoh: konstruksi, jembatan, gedung):');
         this.userStateManager.setState(chatId, 'awaiting_keyword');
         break;
         

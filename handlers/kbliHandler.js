@@ -9,12 +9,27 @@ class KbliHandler {
   }
 
   // Handle Tambah KBLI
-  handleAddKbli(chatId, kbli) {
-    if (this.dataManager.addKbli(chatId, kbli)) {
-      this.bot.sendMessage(chatId, `✅ KBLI ${kbli} berhasil ditambahkan!`, this.keyboards.getKbliKeyboard());
-    } else {
-      this.bot.sendMessage(chatId, `❌ KBLI ${kbli} sudah ada dalam daftar!`, this.keyboards.getKbliKeyboard());
+  handleAddKbli(chatId, kbliInput) {
+    // Split input by comma, trim spaces, filter empty
+    const kblis = kbliInput.split(',').map(k => k.trim()).filter(k => k);
+    let added = [];
+    let already = [];
+    for (const kbli of kblis) {
+      if (this.dataManager.addKbli(chatId, kbli)) {
+        added.push(kbli);
+      } else {
+        already.push(kbli);
+      }
     }
+    let message = '';
+    if (added.length > 0) {
+      message += `✅ KBLI berikut berhasil ditambahkan: ${added.join(', ')}\n`;
+    }
+    if (already.length > 0) {
+      message += `❌ KBLI sudah ada: ${already.join(', ')}\n`;
+    }
+    if (!message) message = 'Tidak ada KBLI yang ditambahkan.';
+    this.bot.sendMessage(chatId, message, this.keyboards.getKbliKeyboard());
     this.userStateManager.clearState(chatId);
   }
 

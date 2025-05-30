@@ -9,12 +9,27 @@ class KeywordHandler {
   }
 
   // Handle Tambah Kata kunci
-  handleAddKeyword(chatId, keyword) {
-    if (this.dataManager.addKeyword(chatId, keyword)) {
-      this.bot.sendMessage(chatId, `✅ Keyword "${keyword}" berhasil ditambahkan!`, this.keyboards.getKeywordsKeyboard());
-    } else {
-      this.bot.sendMessage(chatId, `❌ Keyword "${keyword}" sudah ada dalam daftar!`, this.keyboards.getKeywordsKeyboard());
+  handleAddKeyword(chatId, keywordInput) {
+    // Split input by comma, trim spaces, filter empty
+    const keywords = keywordInput.split(',').map(k => k.trim()).filter(k => k);
+    let added = [];
+    let already = [];
+    for (const keyword of keywords) {
+      if (this.dataManager.addKeyword(chatId, keyword)) {
+        added.push(keyword);
+      } else {
+        already.push(keyword);
+      }
     }
+    let message = '';
+    if (added.length > 0) {
+      message += `✅ Keyword berikut berhasil ditambahkan: ${added.join(', ')}\n`;
+    }
+    if (already.length > 0) {
+      message += `❌ Keyword sudah ada: ${already.join(', ')}\n`;
+    }
+    if (!message) message = 'Tidak ada keyword yang ditambahkan.';
+    this.bot.sendMessage(chatId, message, this.keyboards.getKeywordsKeyboard());
     this.userStateManager.clearState(chatId);
   }
 
