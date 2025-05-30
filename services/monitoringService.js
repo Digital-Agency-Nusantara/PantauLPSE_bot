@@ -36,10 +36,6 @@ class MonitoringService {
 
     this.isActive = true;
     this.startScrapingLoop();
-    
-    // Notify all users
-    await this.notificationService.notifyMonitoringStart(allUrls.length);
-
     return {
       success: true,
       message: `Monitoring dimulai untuk ${activeUsers.length} user dan ${allUrls.length} URL LPSE`
