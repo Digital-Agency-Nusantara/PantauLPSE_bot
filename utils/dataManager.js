@@ -223,8 +223,14 @@ class DataManager {
   // Notification management
   addSentTender(chatId, kodeTender) {
     const user = this.getUser(chatId);
-    if (user && !user.sentTenders.includes(kodeTender)) {
-      user.sentTenders.push(kodeTender);
+    if (!user) return false;
+    const today = new Date().toISOString().slice(0, 10);
+    // Cek apakah kodeTender sudah pernah dikirim (boleh lebih dari 1 hari, tapi tidak double di hari yang sama)
+    const alreadySent = user.sentTenders.some(
+      t => (typeof t === 'object' ? t.kodeTender : t) === kodeTender && (typeof t === 'object' ? t.date : today) === today
+    );
+    if (!alreadySent) {
+      user.sentTenders.push({ kodeTender, date: today });
       this.saveData();
       return true;
     }

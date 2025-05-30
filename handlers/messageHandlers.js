@@ -273,12 +273,26 @@ Admin: ${config.ADMIN_TELE}`);
         usersToShow.forEach((user, idx) => {
           const remainingDays = this.dataManager.getRemainingDays(user.chatId);
           const status = (remainingDays === null || remainingDays <= 0) ? 'Expired' : 'Aktif';
+          const expiryDate = user.expiryDate ? new Date(user.expiryDate).toLocaleDateString('id-ID') : '-';
+          const includeNonTender = user.includeNonTender ? '✅ Termasuk' : '❌ Tidak Termasuk';
+          // Hitung total notifikasi hari ini
+          const today = new Date().toISOString().slice(0, 10);
+          let totalToday = 0;
+          let totalAll = 0;
+          if (Array.isArray(user.sentTenders)) {
+            totalToday = user.sentTenders.filter(t => (typeof t === 'object' ? t.date : today) === today).length;
+            totalAll = user.sentTenders.length;
+          }
           msg += `\n${idx+1 + page * pageSize}. *${user.name}* (${status})\n` +
                  `   • PT: ${user.company || '-'}\n` +
                  `   • WhatsApp: ${user.whatsapp || '-'}\n` +
                  `   • ID: \`${user.chatId}\`\n` +
                  `   • KBLI: ${user.kbliList.length}\n` +
-                 `   • Keyword: ${user.keywords.length}\n`;
+                 `   • Keyword: ${user.keywords.length}\n` +
+                 `   • Masa Aktif: ${expiryDate} (${remainingDays === null ? '-' : remainingDays + ' hari'})\n` +
+                 `   • Non Tender: ${includeNonTender}\n` +
+                 `   • Notif Hari Ini: ${totalToday}\n` +
+                 `   • Total Notif: ${totalAll}\n`;
         });
         let keyboard = { parse_mode: 'Markdown' };
         if (users.length > pageSize) {
@@ -320,12 +334,26 @@ Admin: ${config.ADMIN_TELE}`);
         usersToShow.forEach((user, idx) => {
           const remainingDays = this.dataManager.getRemainingDays(user.chatId);
           const status = (remainingDays === null || remainingDays <= 0) ? 'Expired' : 'Aktif';
+          const expiryDate = user.expiryDate ? new Date(user.expiryDate).toLocaleDateString('id-ID') : '-';
+          const includeNonTender = user.includeNonTender ? '✅ Termasuk' : '❌ Tidak Termasuk';
+          // Hitung total notifikasi hari ini
+          const today = new Date().toISOString().slice(0, 10);
+          let totalToday = 0;
+          let totalAll = 0;
+          if (Array.isArray(user.sentTenders)) {
+            totalToday = user.sentTenders.filter(t => (typeof t === 'object' ? t.date : today) === today).length;
+            totalAll = user.sentTenders.length;
+          }
           msg += `\n${idx+1 + page * pageSize}. *${user.name}* (${status})\n` +
                  `   • PT: ${user.company || '-'}\n` +
                  `   • WhatsApp: ${user.whatsapp || '-'}\n` +
                  `   • ID: \`${user.chatId}\`\n` +
                  `   • KBLI: ${user.kbliList.length}\n` +
-                 `   • Keyword: ${user.keywords.length}\n`;
+                 `   • Keyword: ${user.keywords.length}\n` +
+                 `   • Masa Aktif: ${expiryDate} (${remainingDays === null ? '-' : remainingDays + ' hari'})\n` +
+                 `   • Non Tender: ${includeNonTender}\n` +
+                 `   • Notif Hari Ini: ${totalToday}\n` +
+                 `   • Total Notif: ${totalAll}\n`;
         });
         let keyboard = { parse_mode: 'Markdown' };
         if ((page + 1) * pageSize < users.length) {

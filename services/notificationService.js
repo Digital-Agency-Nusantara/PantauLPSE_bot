@@ -26,32 +26,35 @@ class NotificationService {
         return regex.test(namaPaket);
       });
       
-      if (finalMatchKbli || finalMatchKeyword) {
-        // Check if already sent
-        if (!user.sentTenders.includes(kodeTender)) {
-          const detailPaket = this.formatTenderNotification({
-            namaInstansi,
-            link,
-            namaPaket,
-            jenisPengadaan,
-            kodeTender,
-            matchedKbli,
-            hps,
-            tanggalAkhir,
-            finalMatchKbli,
-            finalMatchKeyword
-          });
-          
-          try {
-            await this.bot.sendMessage(user.chatId, detailPaket);
-            this.dataManager.addSentTender(user.chatId, kodeTender);
-            console.log(`Notifikasi dikirim ke ${user.name} untuk tender ${kodeTender}`);
-          } catch (error) {
-            console.error(`Error mengirim notifikasi ke ${user.name}:`, error);
-          }
-          
-          await this.delay(1000);
+      // Cek apakah sudah pernah dikirim hari ini
+      const today = new Date().toISOString().slice(0, 10);
+      const alreadySent = user.sentTenders.some(
+        t => (typeof t === 'object' ? t.kodeTender : t) === kodeTender && (typeof t === 'object' ? t.date : today) === today
+      );
+      
+      if ((finalMatchKbli || finalMatchKeyword) && !alreadySent) {
+        const detailPaket = this.formatTenderNotification({
+          namaInstansi,
+          link,
+          namaPaket,
+          jenisPengadaan,
+          kodeTender,
+          matchedKbli,
+          hps,
+          tanggalAkhir,
+          finalMatchKbli,
+          finalMatchKeyword
+        });
+        
+        try {
+          await this.bot.sendMessage(user.chatId, detailPaket);
+          this.dataManager.addSentTender(user.chatId, kodeTender);
+          console.log(`Notifikasi dikirim ke ${user.name} untuk tender ${kodeTender}`);
+        } catch (error) {
+          console.error(`Error mengirim notifikasi ke ${user.name}:`, error);
         }
+        
+        await this.delay(1000);
       }
     }
   }
