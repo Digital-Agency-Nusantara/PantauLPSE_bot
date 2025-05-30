@@ -32,32 +32,45 @@ class MessageHandlers {
     // Store company name temporarily
     this.userStateManager.setTempData(chatId, 'company', text);
     
-    // Ask for WhatsApp number
+    // Ask for WhatsApp number, show button request_contact
     this.bot.sendMessage(chatId, 
       `Terima kasih!\n\n` +
-      `Mohon masukkan nomor WhatsApp Anda (contoh: 081234567890):`
+      `Mohon masukkan nomor WhatsApp Anda (contoh: 081234567890):\n\n` +
+      `Atau klik tombol di bawah untuk mengirim nomor HP Telegram Anda secara otomatis.`,
+      {
+        reply_markup: {
+          keyboard: [
+            [{ text: 'Kirim Nomor Telepon', request_contact: true }]
+          ],
+          one_time_keyboard: true,
+          resize_keyboard: true
+        }
+      }
     );
     this.userStateManager.setState(chatId, 'awaiting_whatsapp');
   }
 
   // Handle registration WhatsApp
   handleRegistrationWhatsApp(chatId, text, msg) {
-    // Validate WhatsApp number format
-    const whatsappRegex = /^[0-9]{10,15}$/;
-    if (!whatsappRegex.test(text)) {
-      this.bot.sendMessage(chatId, 
-        `Format nomor WhatsApp tidak valid. Mohon masukkan hanya angka (10-15 digit).\n\n` +
-        `Contoh: 081234567890`
-      );
-      return;
+    // Jika user mengirim nomor via tombol request_contact
+    if (msg.contact && msg.contact.phone_number) {
+      this.userStateManager.setTempData(chatId, 'whatsapp', msg.contact.phone_number);
+    } else {
+      // Validate WhatsApp number format
+      const whatsappRegex = /^[0-9]{10,15}$/;
+      if (!whatsappRegex.test(text)) {
+        this.bot.sendMessage(chatId, 
+          `Format nomor WhatsApp tidak valid. Mohon masukkan hanya angka (10-15 digit).\n\n` +
+          `Contoh: 081234567890`
+        );
+        return;
+      }
+      // Store WhatsApp number temporarily
+      this.userStateManager.setTempData(chatId, 'whatsapp', text);
     }
-    
-    // Store WhatsApp number temporarily
-    this.userStateManager.setTempData(chatId, 'whatsapp', text);
     
     // Get username from message
     const username = msg.from.username || '';
-    
     // Store username temporarily
     this.userStateManager.setTempData(chatId, 'username', username);
     
