@@ -11,4 +11,10 @@ bot_users.json
 .Spotlight-V100
 .Trashes
 ehthumbs.db
-Thumbs.db 
+Thumbs.db
+
+# Config files
+config/config.js
+
+# Bot users
+bot_users
