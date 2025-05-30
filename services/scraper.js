@@ -66,6 +66,7 @@ class Scraper {
         const linkpaket = linkElement.attr('href');
         const link = new URL(linkpaket, url).href;
         const namaPaket = linkElement.text().trim();
+        console.log(`Berhasil scrape paket: ${namaPaket}`);
         const hps = hpsElement.text().trim();
         const tanggalAkhir = tanggalAkhirElement.text().trim();
         
