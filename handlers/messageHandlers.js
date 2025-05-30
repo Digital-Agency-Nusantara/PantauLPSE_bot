@@ -351,6 +351,42 @@ Admin: ${config.ADMIN_TELE}`);
         this.bot.sendMessage(chatId, msg, keyboard);
         break;
       }
+      case '🛠️ Admin Panel': {
+        if (!config.ADMIN_IDS.includes(chatId.toString())) {
+          this.bot.sendMessage(chatId, '❌ Maaf, menu ini hanya untuk admin.');
+          break;
+        }
+        this.bot.sendMessage(chatId, 'Pilih menu admin:', {
+          reply_markup: {
+            keyboard: [
+              ['📊 Stats', '📢 Broadcast'],
+              ['🏠 Kembali ke Menu']
+            ],
+            resize_keyboard: true,
+            one_time_keyboard: false
+          }
+        });
+        break;
+      }
+      case '📊 Stats': {
+        if (!config.ADMIN_IDS.includes(chatId.toString())) {
+          this.bot.sendMessage(chatId, '❌ Maaf, menu ini hanya untuk admin.');
+          break;
+        }
+        if (this.commandHandlers) {
+          this.commandHandlers.handleAdminStats({ chat: { id: chatId } });
+        }
+        break;
+      }
+      case '📢 Broadcast': {
+        if (!config.ADMIN_IDS.includes(chatId.toString())) {
+          this.bot.sendMessage(chatId, '❌ Maaf, menu ini hanya untuk admin.');
+          break;
+        }
+        this.bot.sendMessage(chatId, 'Ketik pesan broadcast yang ingin dikirim ke semua user:');
+        this.userStateManager.setState(chatId, 'awaiting_admin_broadcast');
+        break;
+      }
       default:
         this.bot.sendMessage(chatId, 'Menu tidak dikenali. Pilih dari menu yang tersedia.', this.keyboards.getMainMenuKeyboard(chatId));
     }
@@ -502,6 +538,18 @@ Admin: ${config.ADMIN_TELE}`);
         } else {
           this.handleSetExpiry(chatId, text);
         }
+        break;
+      case 'awaiting_admin_broadcast':
+        if (!config.ADMIN_IDS.includes(chatId.toString())) {
+          this.bot.sendMessage(chatId, '❌ Maaf, hanya admin yang dapat broadcast.');
+          this.userStateManager.clearState(chatId);
+          break;
+        }
+        if (this.commandHandlers) {
+          this.commandHandlers.handleAdminBroadcast({ chat: { id: chatId } }, [null, text]);
+        }
+        this.userStateManager.clearState(chatId);
+        this.bot.sendMessage(chatId, '✅ Broadcast dikirim ke semua user.', this.keyboards.getMainMenuKeyboard(chatId));
         break;
       default:
         this.handleMenuSelection(chatId, text);

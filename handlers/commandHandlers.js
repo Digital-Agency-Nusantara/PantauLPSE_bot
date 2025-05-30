@@ -155,7 +155,7 @@ class CommandHandlers {
   }
 
   // Handle /admin_broadcast command
-  handleAdminBroadcast(msg, match) {
+  async handleAdminBroadcast(msg, match) {
     const chatId = msg.chat.id;
     const message = match[1];
     
@@ -166,14 +166,14 @@ class CommandHandlers {
     
     let sentCount = 0;
     const users = this.dataManager.getAllUsers();
-    Object.keys(users).forEach(async (userId) => {
+    for (const userId of Object.keys(users)) {
       try {
         await this.bot.sendMessage(userId, `📢 BROADCAST MESSAGE:\n\n${message}`);
         sentCount++;
       } catch (error) {
         console.error(`Failed to send broadcast to ${userId}:`, error);
       }
-    });
+    }
     
     this.bot.sendMessage(chatId, `✅ Broadcast sent to ${sentCount} users`);
   }

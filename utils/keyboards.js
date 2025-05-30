@@ -28,7 +28,7 @@ function getMainMenuKeyboard(chatId) {
           ['⚙️ Pengaturan', monitoringButton],
           ['📈 Status', '👤 Profil'],
           ['🔄 Set Masa Aktif', '❓ Bantuan'],
-          ['👥 Daftar Pengguna']
+          ['👥 Daftar Pengguna', '🛠️ Admin Panel']
         ],
         resize_keyboard: true,
         one_time_keyboard: false
